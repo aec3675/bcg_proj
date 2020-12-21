@@ -14,7 +14,7 @@ print('Saving data to :', args.save_data_dir)
 config = configparser.ConfigParser()
 config.read(args.config_path) #needs to be in same dir as savedir
 #print(config.sections())
-kappadir = config['files']['kappadir']
+kappadir = config['files']['kappadir'] #NEED TO CHANGE KAPPADIR PATH IN CONFIG FILE
 Rdelta = config['params']['radius'] #can also be 'rd200'
 # w_guess = int(config['params']['w_guess'])
 
@@ -32,10 +32,10 @@ from matplotlib.colors import LogNorm
 import os, sys
 import numpy as np
 import pandas as pd
-sys.path.append('/content/gdrive/My Drive/data/Ricardo_data')
+sys.path.append('/content/gdrive/My Drive/data/Ricardo_data') #NEED TO CHANGE
 #!ls '/content/gdrive/My Drive/data/'
-import temp_plotting as pl #THIS IS MINE NOT RICARDOS
-import shapes_lib as sl
+import temp_plotting as pl #THIS IS MINE NOT RICARDOS--MAYBE NEED TO CHANGE?
+import shapes_lib as sl #NEED TO CHANGE FILE PATH
 from astropy.io import ascii
 from astropy.table import Table
 import multiprocessing
@@ -47,9 +47,8 @@ from skimage.transform import downscale_local_mean
 print('IMPORTED STUFFS')
 
 #######################################################################################################
-#NEED TO CHANGE THIS BEFORE RUNNING #
-# Just take the clusters where there are both BCG and kappa image
-kappa_list = pd.read_csv('/content/drive/My Drive/data/kappa_maps_list.csv', sep=',')
+#NEED TO CHANGE THIS BEFORE RUNNING TO THE BCG WAY#
+kappa_list = pd.read_csv('/content/drive/My Drive/data/kappa_maps_list.csv', sep=',') #CHANGE THIS LINE
 bcg_list = kappa_list['filename_x']
 nbcg = len(bcg_list)
 print('# of Kappa maps =', nbcg)#,bcg_list)
@@ -98,7 +97,7 @@ def measure_all(i):
 
   t0=time.time()
 
-  # #Compute moments ------------------------------- 
+  #Compute moments ------------------------------- 
   # # Unweighted moments full image
   # q20,q11,q02 = sl.weighted_higher_order_moments(bcg_im,1.e6,2,xctr,yctr)
   # q00 = sl.weighted_higher_order_moments(bcg_im,1.e6,0,xctr,yctr)[0]
@@ -109,30 +108,30 @@ def measure_all(i):
   # colnames += ['moment_unwghtd_xc','moment_unwghtdyc','moment_unwghtd_T','moment_unwghtd_q','moment_unwghtd_pos_ang']
 
 
-  # # Weighted moments full image
-  # q20,q11,q02 = sl.weighted_higher_order_moments(bcg_im,rdelta,2,xctr,yctr)
-  # q00 = sl.weighted_higher_order_moments(bcg_im,rdelta,0,xctr,yctr)[0]
-  # Tchi = np.around(np.sqrt((q20+q02)/q00),decimals=2)
-  # size_a,size_b,pos_angle = sl.axes_lengths_from_chi_moments(Tchi,(q20-q02)/(q20+q02),2*q11/(q20+q02))
-  # # Save results
-  # the_res += [xctr,yctr,Tchi,size_b/size_a,pos_angle+90]
-  # colnames += ['moment_wghtd_'+Rdelta+'_xc','moment_wghtd_'+Rdelta+'_yc','moment_wghtd_'+Rdelta+'_T','moment_wghtd_'+Rdelta+'_q','moment_wghtd_'+Rdelta+'_pos_ang']
+  # Weighted moments full image
+  q20,q11,q02 = sl.weighted_higher_order_moments(bcg_im,rdelta,2,xctr,yctr)
+  q00 = sl.weighted_higher_order_moments(bcg_im,rdelta,0,xctr,yctr)[0]
+  Tchi = np.around(np.sqrt((q20+q02)/q00),decimals=2)
+  size_a,size_b,pos_angle = sl.axes_lengths_from_chi_moments(Tchi,(q20-q02)/(q20+q02),2*q11/(q20+q02))
+  # Save results
+  the_res += [xctr,yctr,Tchi,size_b/size_a,pos_angle+90]
+  colnames += ['moment_wghtd_'+Rdelta+'_xc','moment_wghtd_'+Rdelta+'_yc','moment_wghtd_'+Rdelta+'_T','moment_wghtd_'+Rdelta+'_q','moment_wghtd_'+Rdelta+'_pos_ang']
 
 
-  # # Unweighted moments annulus around Rdelta
-  # q20,q11,q02 = sl.weighted_higher_order_moments(annulus_im,1.e6,2,xctr,yctr)
-  # q00 = sl.weighted_higher_order_moments(annulus_im,1.e6,0,xctr,yctr)[0]
-  # print('Q',q20,q11,q02,q00,q20+q02/q00, (q20-q02)/(q20+q02),2*q11/(q20+q02))
-  # Tchi = np.around(np.sqrt((q20+q02)/q00),decimals=2)
-  # size_a,size_b,pos_angle = sl.axes_lengths_from_chi_moments(Tchi,(q20-q02)/(q20+q02),2*q11/(q20+q02))
-  # # Save results
-  # the_res += [xctr,yctr,Tchi,size_b/size_a,pos_angle+90]
-  # colnames += ['moment_unwghtd_annulus_xc','moment_unwghtd_annulus_yc','moment_unwghtd_annulus_T','moment_unwghtd_annulus_q','moment_unwghtd_annulus_pos_ang']
+  # Unweighted moments annulus around Rdelta
+  q20,q11,q02 = sl.weighted_higher_order_moments(annulus_im,1.e6,2,xctr,yctr)
+  q00 = sl.weighted_higher_order_moments(annulus_im,1.e6,0,xctr,yctr)[0]
+  print('Q',q20,q11,q02,q00,q20+q02/q00, (q20-q02)/(q20+q02),2*q11/(q20+q02))
+  Tchi = np.around(np.sqrt((q20+q02)/q00),decimals=2)
+  size_a,size_b,pos_angle = sl.axes_lengths_from_chi_moments(Tchi,(q20-q02)/(q20+q02),2*q11/(q20+q02))
+  # Save results
+  the_res += [xctr,yctr,Tchi,size_b/size_a,pos_angle+90]
+  colnames += ['moment_unwghtd_annulus_xc','moment_unwghtd_annulus_yc','moment_unwghtd_annulus_T','moment_unwghtd_annulus_q','moment_unwghtd_annulus_pos_ang']
 
-  # # Plot the annulus measurements
-  # mom_p=((xctr,yctr),Tchi, 
-  #        np.around((q20-q02)/(q20+q02),decimals=4),
-  #        np.around((2*q11)/(q20+q02),decimals=4))
+  # Plot the annulus measurements
+  mom_p=((xctr,yctr),Tchi, 
+         np.around((q20-q02)/(q20+q02),decimals=4),
+         np.around((2*q11)/(q20+q02),decimals=4))
 
   tm = time.time()
 
@@ -156,7 +155,7 @@ def measure_all(i):
 
   #Measure contour ---------------------------------
   # Measure contour and its properties for contour closest in size to Rdelta
-  #at r500
+  #at input r
   lcon,lcon_p,mincont = sl.get_contour_at_radius(bcg_im,rdelta,begin=30,end=90)
   a_c,b_c = lcon_p[0][0].major_axis_length,lcon_p[0][0].minor_axis_length
   theta_c = 180 - lcon_p[0][0].orientation*180/np.pi
@@ -284,7 +283,7 @@ def do_all(bcg_indices):
 
 print('DEFINED ALL THE FUNCTIONS')
 
-# Cluster properties
+# Cluster properties--NEED TO CHANGE FILE PATH 
 clname,r500a,r200a = np.loadtxt('./SPA300/halo_properties/radii_masses_z0.2198.txt',
                                 unpack=True,dtype=str,usecols=(0,2,3))
 
