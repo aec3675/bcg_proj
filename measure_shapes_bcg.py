@@ -14,7 +14,7 @@ print('Saving data to :', args.save_data_dir)
 config = configparser.ConfigParser()
 config.read(args.config_path) #needs to be in same dir as savedir
 #print(config.sections())
-bcgdir = config['files']['bcgdir']
+bcgdir = config['files']['bcgdir'] #NEED TO CHANGE CONFIG FILE BCG PATH
 percentile = int(config['params']['percentile'])
 w_guess = int(config['params']['w_guess'])
 print('BCGDIR =', bcgdir, type(bcgdir))
@@ -37,11 +37,11 @@ import photutils
 import time
 import statmorph
 from astropy.visualization import simple_norm
-sys.path.append('/content/gdrive/My Drive/data/Ricardo_data') #added in my file path
-sys.path.append('gdrive/My Drive/data/Ricardo_data') #added in my file path
+sys.path.append('/content/gdrive/My Drive/data/Ricardo_data') #NEED TO CHANGE
+#sys.path.append('gdrive/My Drive/data/Ricardo_data') #added in my file path
 #!ls '/content/gdrive/My Drive/data/'
-import shapes_lib as sl
-import plotting as pl
+import shapes_lib as sl #NEED TO CHANGE FILE PATH
+import plotting as pl #NEED TO CHANGE FILE PATH
 from astropy.io import ascii
 from astropy.table import Table
 import multiprocessing
@@ -87,16 +87,16 @@ def measure_all(i):
          np.around((q20-q02)/(q20+q02),decimals=4),
          np.around((2*q11)/(q20+q02),decimals=4))
 
-  # Fit Sersic-----------------------------------------------------
-  fit_morph = sl.fit_sersic(bcg_im,verbose=False,plot_mod=False)
-  q_sersic= (1-fit_morph.sersic_ellip)/(1+fit_morph.sersic_ellip)
-  # Save results
-  if q_sersic==-1:
-    the_res+=[-1,-1,-1,q_sersic,-1]
-  else:
-    the_res+=[fit_morph.sersic_xc,fit_morph.sersic_yc,fit_morph.sersic_rhalf,
-                        q_sersic,fit_morph.sersic_theta*180/np.pi + 90]
-  colnames+=['sersic_fit_xc','sersic_fit_yc','sersic_fit_r','sersic_fit_q','sersic_fit_pos_ang']
+#   # Fit Sersic-----------------------------------------------------
+#   fit_morph = sl.fit_sersic(bcg_im,verbose=False,plot_mod=False)
+#   q_sersic= (1-fit_morph.sersic_ellip)/(1+fit_morph.sersic_ellip)
+#   # Save results
+#   if q_sersic==-1:
+#     the_res+=[-1,-1,-1,q_sersic,-1]
+#   else:
+#     the_res+=[fit_morph.sersic_xc,fit_morph.sersic_yc,fit_morph.sersic_rhalf,
+#                         q_sersic,fit_morph.sersic_theta*180/np.pi + 90]
+#   colnames+=['sersic_fit_xc','sersic_fit_yc','sersic_fit_r','sersic_fit_q','sersic_fit_pos_ang']
 
 
   # Measure (longest) contour and its properties -- ((percentile variable used here))-----------
@@ -135,7 +135,7 @@ def write_it(results,measured_bcg_list,colnames=None):
   data['cluster']=measured_bcg_list
   clnr=[bb.split('_')[1]+'.'+bb.split('_')[3][0] for bb in measured_bcg_list]
   data['clusternr']=clnr
-  ascii.write(data,args.save_data_dir+'TEST_BCG_shape_measurements.csv',overwrite=True,format='csv')
+  ascii.write(data,args.save_data_dir+'TESTALL_BCG_shape_measurements.csv',overwrite=True,format='csv')
 
 
 #expands measure_all to all bcg indices
