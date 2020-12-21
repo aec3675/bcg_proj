@@ -46,10 +46,8 @@ from skimage.transform import downscale_local_mean
 
 print('IMPORTED STUFFS')
 
-#######################################################################################################
-#NEED TO CHANGE THIS BEFORE RUNNING TO THE BCG WAY#
-kappa_list = pd.read_csv('/content/drive/My Drive/data/kappa_maps_list.csv', sep=',') #CHANGE THIS LINE
-bcg_list = kappa_list['filename_x']
+##################################################################
+bcg_list = np.array(os.listdir(kappadir))
 nbcg = len(bcg_list)
 print('# of Kappa maps =', nbcg)#,bcg_list)
 
